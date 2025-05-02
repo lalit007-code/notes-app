@@ -7,7 +7,6 @@ A minimal Supabase backend for a personal notes service.
 ```sql
 CREATE TABLE notes (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   title TEXT NOT NULL,
   content TEXT NOT NULL,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
@@ -16,8 +15,8 @@ CREATE TABLE notes (
 ```
 
 **Why this schema?**
+
 - UUID primary key provides globally unique IDs suitable for distributed systems and future scaling
-- Foreign key relationship with auth.users ensures data integrity and enables cascading deletions
 - TEXT type for title and content allows for variable-length entries without arbitrary limits
 - Timestamps with timezone support ensures consistent time representation across different regions
 - Default values for timestamps reduce application code complexity and ensure data consistency
@@ -45,18 +44,21 @@ The API includes two Edge Functions:
 ## Setup & Deployment
 
 1. **Create a Supabase Project**:
+
    - Go to [https://app.supabase.com](https://app.supabase.com)
    - Create a new project
    - Note your project URL and API keys
 
 2. **Apply Database Schema**:
+
    - Go to the SQL Editor in your Supabase dashboard
    - Run the contents of `schema.sql`
 
 3. **Deploy Edge Functions**:
+
    - Connect to Supabase: `npx supabase login`
    - Link your project: `npx supabase link --project-ref YOUR_PROJECT_REF`
-   - Deploy functions: 
+   - Deploy functions:
      ```
      npx supabase functions deploy post-notes
      npx supabase functions deploy get-notes
@@ -80,6 +82,7 @@ curl -X POST "https://YOUR_PROJECT_REF.supabase.co/functions/v1/post-notes" \
 ```
 
 Example Response:
+
 ```json
 {
   "id": "550e8400-e29b-41d4-a716-446655440000",
@@ -99,6 +102,7 @@ curl -X GET "https://YOUR_PROJECT_REF.supabase.co/functions/v1/get-notes?limit=1
 ```
 
 Example Response:
+
 ```json
 [
   {
